@@ -12,13 +12,7 @@ const app = express();
 connectDB();
 
 // Enabling CORS
-app.use(cors(
-    {
-        origin: ['https://insightify-ten.vercel.app/'],
-        methods: ['GET', 'POST'],
-        credentials: true
-    }
-));
+app.use(cors());
 
 app.use(express.json());
 
