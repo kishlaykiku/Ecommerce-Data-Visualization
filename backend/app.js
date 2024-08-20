@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+import cors from 'cors';
 import shopifyRoutes from './routes/shopifyRoutes.js';
 
 dotenv.config();
@@ -9,6 +10,9 @@ const app = express();
 
 // Connect to MongoDB
 connectDB();
+
+// Enable CORS
+app.use(cors());
 
 app.use(express.json());
 
