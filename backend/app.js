@@ -8,15 +8,15 @@ dotenv.config();
 
 const app = express();
 
-// Connect to MongoDB
+// Connecting to the database
 connectDB();
 
-// Enable CORS
+// Enabling CORS
 app.use(cors());
 
 app.use(express.json());
 
-// Use Shopify routes
+// Using Shopify routes
 app.use('/api/shopify', shopifyRoutes);
 
 app.get('/', (req, res) => {
