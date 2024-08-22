@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import ChartComponent from '../components/ChartComponent';
+import { Puff } from 'react-loader-spinner';
 import {
     getTotalSalesOverTime,
     getSalesGrowthRateOverTime,
@@ -27,44 +28,56 @@ const Dashboard = ({ darkMode }) => {
     const [repeatCustomersData, setRepeatCustomersData] = useState(null);
     const [geoDistributionData, setGeoDistributionData] = useState(null);
     const [lifetimeValueData, setLifetimeValueData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await getTotalSalesOverTime();
-            const chartData = {
-                labels: data.map(entry => `${entry._id.year}-${entry._id.month}`),
-                datasets: [
-                    {
-                        label: 'Total Sales',
-                        data: data.map(entry => entry.totalSales),
-                        fill: false,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                    },
-                ],
-            };
-            setSalesData(chartData);
-          };
+            setLoading(true);
+            try {
+                const data = await getTotalSalesOverTime();
+                const chartData = {
+                    labels: data.map(entry => `${entry._id.year}-${entry._id.month}`),
+                    datasets: [
+                        {
+                            label: 'Total Sales',
+                            data: data.map(entry => entry.totalSales),
+                            fill: false,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                        },
+                    ],
+                };
+                setSalesData(chartData);
+            } catch (error) {
+                console.error("Error fetching sales data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
         fetchData();
     }, []);
 
     useEffect(() => {
         const fetchGrowthRateData = async () => {
-            const data = await getSalesGrowthRateOverTime();
-            const chartData = {
-                labels: data.map(entry => `${entry._id.year}-${entry._id.month}`),
-                datasets: [
-                    {
-                        label: 'Sales Growth Rate (%)',
-                        data: data.map(entry => entry.salesGrowthRate),
-                        fill: false,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                    },
-                ],
-            };
-            setGrowthRateData(chartData);
+            try {
+                const data = await getSalesGrowthRateOverTime();
+                const chartData = {
+                    labels: data.map(entry => `${entry._id.year}-${entry._id.month}`),
+                    datasets: [
+                        {
+                            label: 'Sales Growth Rate (%)',
+                            data: data.map(entry => entry.salesGrowthRate),
+                            fill: false,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                        },
+                    ],
+                };
+                setGrowthRateData(chartData);
+            } catch (error) {
+                console.error("Error fetching growth rate data:", error);
+            }
         };
 
         fetchGrowthRateData();
@@ -72,20 +85,24 @@ const Dashboard = ({ darkMode }) => {
 
     useEffect(() => {
         const fetchNewCustomersData = async () => {
-            const data = await getNewCustomersOverTime();
-            const chartData = {
-                labels: data.map(entry => `${entry._id.year}-${entry._id.month}`),
-                datasets: [
-                    {
-                        label: 'New Customers',
-                        data: data.map(entry => entry.newCustomers),
-                        fill: false,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                    },
-                ],
-            };
-            setNewCustomersData(chartData);
+            try {
+                const data = await getNewCustomersOverTime();
+                const chartData = {
+                    labels: data.map(entry => `${entry._id.year}-${entry._id.month}`),
+                    datasets: [
+                        {
+                            label: 'New Customers',
+                            data: data.map(entry => entry.newCustomers),
+                            fill: false,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                        },
+                    ],
+                };
+                setNewCustomersData(chartData);
+            } catch (error) {
+                console.error("Error fetching new customers data:", error);
+            }
         };
 
         fetchNewCustomersData();
@@ -93,20 +110,24 @@ const Dashboard = ({ darkMode }) => {
 
     useEffect(() => {
         const fetchRepeatCustomersData = async () => {
-            const data = await getRepeatCustomers();
-            const chartData = {
-                labels: ['Repeat Customers'],
-                datasets: [
-                    {
-                        label: 'Repeat Customers',
-                        data: [data[0].repeatCustomers],
-                        fill: false,
-                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                        borderColor: 'rgba(255, 206, 86, 1)',
-                    },
-                ],
-            };
-            setRepeatCustomersData(chartData);
+            try {
+                const data = await getRepeatCustomers();
+                const chartData = {
+                    labels: ['Repeat Customers'],
+                    datasets: [
+                        {
+                            label: 'Repeat Customers',
+                            data: [data[0].repeatCustomers],
+                            fill: false,
+                            backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                        },
+                    ],
+                };
+                setRepeatCustomersData(chartData);
+            } catch (error) {
+                console.error("Error fetching repeat customers data:", error);
+            }
         };
 
         fetchRepeatCustomersData();
@@ -114,20 +135,24 @@ const Dashboard = ({ darkMode }) => {
 
     useEffect(() => {
         const fetchGeoDistributionData = async () => {
-            const data = await getGeographicalDistribution();
-            const chartData = {
-                labels: data.map(entry => entry._id),
-                datasets: [
-                    {
-                      label: 'Customer Count by City',
-                      data: data.map(entry => entry.customerCount),
-                      fill: false,
-                      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                      borderColor: 'rgba(75, 192, 192, 1)',
-                    },
-                ],
-            };
-            setGeoDistributionData(chartData);
+            try {
+                const data = await getGeographicalDistribution();
+                const chartData = {
+                    labels: data.map(entry => entry._id),
+                    datasets: [
+                        {
+                            label: 'Customer Count by City',
+                            data: data.map(entry => entry.customerCount),
+                            fill: false,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                        },
+                    ],
+                };
+                setGeoDistributionData(chartData);
+            } catch (error) {
+                console.error("Error fetching geographical distribution data:", error);
+            }
         };
 
         fetchGeoDistributionData();
@@ -135,20 +160,24 @@ const Dashboard = ({ darkMode }) => {
 
     useEffect(() => {
         const fetchLifetimeValueData = async () => {
-            const data = await getCustomerLifetimeValueByCohorts();
-            const chartData = {
-                labels: data.map(entry => entry._id),
-                datasets: [
-                    {
-                        label: 'Avg Lifetime Value (INR)',
-                        data: data.map(entry => entry.averageLifetimeValue),
-                        fill: false,
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                    },
-                ],
-            };
-            setLifetimeValueData(chartData);
+            try {
+                const data = await getCustomerLifetimeValueByCohorts();
+                const chartData = {
+                    labels: data.map(entry => entry._id),
+                    datasets: [
+                        {
+                            label: 'Avg Lifetime Value (INR)',
+                            data: data.map(entry => entry.averageLifetimeValue),
+                            fill: false,
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                        },
+                    ],
+                };
+                setLifetimeValueData(chartData);
+            } catch (error) {
+                console.error("Error fetching lifetime value data:", error);
+            }
         };
 
         fetchLifetimeValueData();
@@ -157,18 +186,18 @@ const Dashboard = ({ darkMode }) => {
     const getSelectedChartData = () => {
         switch (selectedChart) {
             case 'growthRate':
-              return growthRateData;
+                return growthRateData;
             case 'newCustomers':
-              return newCustomersData;
+                return newCustomersData;
             case 'repeatCustomers':
-              return repeatCustomersData;
+                return repeatCustomersData;
             case 'geoDistribution':
-              return geoDistributionData;
+                return geoDistributionData;
             case 'lifetimeValue':
-              return lifetimeValueData;
+                return lifetimeValueData;
             case 'totalSales':
             default:
-              return salesData;
+                return salesData;
         }
     };
 
@@ -205,9 +234,19 @@ const Dashboard = ({ darkMode }) => {
                     />
                 </div>
                 <div className="flex justify-center">
-                    <div className="w-full max-w-4xl">
-                        {getSelectedChartData() && (
-                            <ChartComponent data={getSelectedChartData()} darkMode={darkMode} />
+                    <div className="w-full max-w-4xl overflow-x-auto md:overflow-visible">
+                        {loading ? (
+                            <div className="flex justify-center items-center h-96">
+                                <Puff color="#00BFFF" height={100} width={100} />
+                            </div>
+                        ) : (
+                            getSelectedChartData() && (
+                                <div className="min-w-[600px] md:min-w-full">
+                                    <div className="h-72 md:h-96">
+                                        <ChartComponent data={getSelectedChartData()} darkMode={darkMode} />
+                                    </div>
+                                </div>
+                            )
                         )}
                     </div>
                 </div>
