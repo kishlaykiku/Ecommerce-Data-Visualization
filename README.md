@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **E-commerce Analytics Dashboard** is a full-stack application designed to visualize key metrics related to sales, customer behavior, and other crucial data points for an e-commerce platform. The project is divided into two main parts: the backend API service and the frontend React application.
+The **E-commerce Analytics Dashboard** is a full-stack application designed to visualize key metrics related to sales, customer behaviour, and other crucial data points for an e-commerce platform. The project is divided into two main parts: the backend API service and the frontend React application.
 
 ## Features
 
